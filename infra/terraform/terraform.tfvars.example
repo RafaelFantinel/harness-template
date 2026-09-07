@@ -1,0 +1,7 @@
+aws_region         = "us-east-1"
+environment        = "dev"
+vpc_id             = "vpc-000000000000"
+public_subnet_ids  = ["subnet-aaaa", "subnet-bbbb"]
+private_subnet_ids = ["subnet-cccc", "subnet-dddd"]
+container_image    = "000000000000.dkr.ecr.us-east-1.amazonaws.com/eligibility-service:1.0.0"
+toggle_base_url    = "https://toggles.internal.acme.com"

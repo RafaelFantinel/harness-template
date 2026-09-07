@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: eligibility-service
+  jackson:
+    default-property-inclusion: non_null
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+eligibility:
+  toggle:
+    base-url: ${TOGGLE_BASE_URL:http://localhost:8081}
+    product: ${TOGGLE_PRODUCT:eligibility-product}
+    timeout-seconds: ${TOGGLE_TIMEOUT_SECONDS:3}
+  dynamo:
+    table-name: ${DYNAMO_TABLE_NAME:cnpj-product-control}
+    region: ${AWS_REGION:us-east-1}
+    endpoint: ${DYNAMO_ENDPOINT:}
+
+logging:
+  level:
+    br.com.acme.eligibility: INFO
