@@ -1,24 +1,47 @@
 ---
+
 name: conventional-commits
-description: Generates semantic commit messages following the Conventional Commits specification with proper types, scopes, breaking changes, and footers. Use when users request "write commit message", "conventional commit", "semantic commit", or "format commit".
+
+description: Gera mensagens de commit semânticas seguindo a especificação Conventional Commits, com tipos, escopos, breaking changes e rodapés apropriados. Use quando os usuários solicitarem "escrever mensagem de commit", "conventional commit", "commit semântico" ou "formatar commit".
+
 ---
 
 # Conventional Commits
 
-Write standardized, semantic commit messages that enable automated versioning and changelog generation.
+Escreva mensagens de commit padronizadas e semânticas que permitam versionamento automatizado e geração de changelogs.
 
-## Core Workflow
+## Fluxo Principal
 
-1. **Analyze changes**: Review staged files and modifications
-2. **Determine type**: Select appropriate commit type (feat, fix, etc.)
-3. **Identify scope**: Optional component/module affected
-4. **Write description**: Concise summary in imperative mood
-5. **Add body**: Optional detailed explanation
-6. **Include footer**: Breaking changes, issue references
+1. **Analisar alterações**: Revise os arquivos staged e as modificações
+2. **Determinar o tipo**: Selecione o tipo apropriado de commit (`feat`, `fix`, etc.)
+3. **Identificar o escopo**: Componente/módulo afetado, quando aplicável
+4. **Escrever a descrição**: Resumo conciso usando o modo imperativo
+5. **Adicionar o corpo**: Explicação detalhada opcional
+6. **Incluir o rodapé**: Breaking changes e referências a issues
 
-## Commit Message Format
 
+## Co-Author Obrigatório
+
+**Todo commit DEVE incluir Devin como coautor.**
+
+A mensagem de commit deve obrigatoriamente conter o seguinte rodapé:
+
+```text
+Co-authored-by: Devin <devin@cognition.ai>
 ```
+
+### Regras
+
+* **NENHUM commit deve ser criado sem o `Co-authored-by` do Devin**
+* O coautor deve ser adicionado mesmo quando a alteração for pequena
+* O coautor deve ser adicionado para todos os tipos de commit: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `build`, `ci`, `perf`, `revert`, etc.
+* O `Co-authored-by` deve aparecer nos **footers** da mensagem
+* Não substituir, remover ou omitir o coautor
+* Outros coautores podem ser adicionados quando necessário, mas o Devin continua sendo obrigatório
+
+## Formato da Mensagem de Commit
+
+```text
 <type>[optional scope]: <description>
 
 [optional body]
@@ -26,70 +49,83 @@ Write standardized, semantic commit messages that enable automated versioning an
 [optional footer(s)]
 ```
 
-## Commit Types
+## Tipos de Commit
 
-| Type | Description | Semver | Example |
-|------|-------------|--------|---------|
-| `feat` | New feature | MINOR | `feat: add user authentication` |
-| `fix` | Bug fix | PATCH | `fix: resolve login redirect loop` |
-| `docs` | Documentation only | - | `docs: update API reference` |
-| `style` | Formatting, whitespace | - | `style: fix indentation in utils` |
-| `refactor` | Code change, no feature/fix | - | `refactor: extract validation logic` |
-| `perf` | Performance improvement | PATCH | `perf: optimize database queries` |
-| `test` | Adding/fixing tests | - | `test: add unit tests for auth` |
-| `build` | Build system, dependencies | - | `build: upgrade to Node 20` |
-| `ci` | CI/CD configuration | - | `ci: add GitHub Actions workflow` |
-| `chore` | Maintenance tasks | - | `chore: update .gitignore` |
-| `revert` | Revert previous commit | - | `revert: undo feature flag change` |
+| Tipo       | Descrição                                               | Semver | Exemplo                              |
+| ---------- | ------------------------------------------------------- | ------ | ------------------------------------ |
+| `feat`     | Nova funcionalidade                                     | MINOR  | `feat: add user authentication`      |
+| `fix`      | Correção de bug                                         | PATCH  | `fix: resolve login redirect loop`   |
+| `docs`     | Apenas documentação                                     | -      | `docs: update API reference`         |
+| `style`    | Formatação, espaços em branco                           | -      | `style: fix indentation in utils`    |
+| `refactor` | Alteração de código sem nova funcionalidade ou correção | -      | `refactor: extract validation logic` |
+| `perf`     | Melhoria de performance                                 | PATCH  | `perf: optimize database queries`    |
+| `test`     | Adição/correção de testes                               | -      | `test: add unit tests for auth`      |
+| `build`    | Sistema de build, dependências                          | -      | `build: upgrade to Node 20`          |
+| `ci`       | Configuração de CI/CD                                   | -      | `ci: add GitHub Actions workflow`    |
+| `chore`    | Tarefas de manutenção                                   | -      | `chore: update .gitignore`           |
+| `revert`   | Reverte um commit anterior                              | -      | `revert: undo feature flag change`   |
 
-## Scopes
+## Escopos
 
-Scopes indicate the area of the codebase affected:
+Os escopos indicam a área da base de código afetada:
 
 ```bash
-# Component/module scopes
+# Escopos de componente/módulo
+
 feat(auth): add OAuth2 support
+
 fix(api): handle timeout errors
+
 docs(readme): add installation steps
 
-# File-based scopes
+# Escopos baseados em arquivo
+
 style(eslint): update linting rules
+
 build(docker): optimize image size
 
-# Layer scopes
+# Escopos por camada
+
 refactor(service): extract user service
+
 test(e2e): add checkout flow tests
 ```
 
 ## Breaking Changes
 
-Mark breaking changes with `!` or `BREAKING CHANGE` footer:
+Marque alterações incompatíveis usando `!` ou o rodapé `BREAKING CHANGE`:
 
 ```bash
-# Using ! notation
-feat(api)!: change response format to JSON:API
+# Usando a notação !
 
-# Using footer
+feat(api)!: change response format to JSON\:API
+
+# Usando o rodapé
+
 feat(api): change response format
 
-BREAKING CHANGE: Response now follows JSON:API specification.
+BREAKING CHANGE: Response now follows JSON\:API specification.
+
 Clients must update their parsers.
 ```
 
-## Commit Message Examples
+## Exemplos de Mensagens de Commit
 
-### Simple Feature
-```
+### Feature Simples
+
+```bash
 feat: add dark mode toggle
 ```
 
-### Feature with Scope
-```
+### Feature com Escopo
+
+```bash
 feat(ui): add dark mode toggle to settings page
 ```
 
-### Bug Fix with Issue Reference
-```
+### Correção de Bug com Referência a Issue
+
+```bash
 fix(auth): resolve session expiration race condition
 
 The session refresh was racing with the expiration check,
@@ -99,7 +135,8 @@ Fixes #234
 ```
 
 ### Breaking Change
-```
+
+```bash
 feat(api)!: migrate to v2 response format
 
 BREAKING CHANGE: All API responses now use camelCase keys
@@ -108,78 +145,98 @@ instead of snake_case. Update client parsers accordingly.
 Migration guide: https://docs.example.com/v2-migration
 ```
 
-### Multiple Footers
-```
+### Múltiplos Rodapés
+
+```bash
 fix(payments): correct tax calculation for EU customers
 
 Updated tax calculation to use customer's billing country
 instead of shipping country for digital goods.
 
 Fixes #456
+
 Reviewed-by: Alice
-Co-authored-by: Bob <bob@example.com>
+
+Co-authored-by: Devin <devin@cognition.ai>
 ```
 
-### Revert Commit
-```
+## Commit de Reversão
+
+```bash
 revert: feat(auth): add OAuth2 support
 
 This reverts commit abc123def456.
 
 Reason: OAuth provider has rate limiting issues in production.
+
 Will re-implement with proper caching.
 ```
 
-## Description Guidelines
+## Diretrizes para a Descrição
 
-### Do
-- Use imperative mood: "add" not "added" or "adds"
-- Keep under 72 characters
-- Start with lowercase
-- No period at the end
-- Be specific and concise
+### Faça
 
-### Don't
-- "Fixed bug" (too vague)
-- "Updated stuff" (not descriptive)
-- "WIP" (commit when ready)
-- "misc changes" (split into separate commits)
+* Use o modo imperativo: `"add"` em vez de `"added"` ou `"adds"`
+* Mantenha a descrição abaixo de 72 caracteres
+* Comece com letra minúscula
+* Não use ponto final
+* Seja específico e conciso
 
-### Good Examples
+### Não Faça
+
+* `"Fixed bug"` — muito vago
+* `"Updated stuff"` — não é descritivo
+* `"WIP"` — faça o commit quando estiver pronto
+* `"misc changes"` — divida em commits separados
+
+### Bons Exemplos
+
 ```bash
 feat: add email verification flow
+
 fix: prevent duplicate form submissions
+
 refactor: extract payment processing to service
+
 perf: cache user preferences in memory
+
 docs: add API authentication examples
 ```
 
-### Bad Examples
+### Exemplos Ruins
+
 ```bash
-# Too vague
+# Muito vago
+
 fix: fixed it
+
 update: updates
 
-# Wrong tense
+# Tempo verbal incorreto
+
 feat: added new feature
+
 fix: fixes the bug
 
-# Too long
+# Muito longo
+
 feat: add a new feature that allows users to export their data in multiple formats including CSV, JSON, and XML
 ```
 
-## Body Guidelines
+## Diretrizes para o Corpo
 
-When to include a body:
-- Changes need context or explanation
-- Complex logic that isn't self-evident
-- Breaking changes require migration info
-- Multiple related changes in one commit
+Quando incluir um corpo:
 
-```
+* As alterações precisam de contexto ou explicação
+* Existe uma lógica complexa que não é autoexplicativa
+* Breaking changes exigem informações de migração
+* Existem várias alterações relacionadas no mesmo commit
+
+```text
 fix(cache): invalidate user cache on profile update
 
 Previously, profile updates were not reflected until cache expiry.
+
 This caused confusion when users updated their avatar and didn't
 see the change immediately.
 
@@ -187,23 +244,24 @@ The fix adds cache invalidation after successful profile updates
 and ensures CDN purge for static assets.
 ```
 
-## Footer Tokens
+## Tokens de Rodapé
 
-| Token | Purpose | Example |
-|-------|---------|---------|
-| `Fixes` | Closes issue | `Fixes #123` |
-| `Closes` | Closes issue | `Closes #456` |
-| `Refs` | References issue | `Refs #789` |
-| `BREAKING CHANGE` | Breaking change | `BREAKING CHANGE: description` |
-| `Reviewed-by` | Reviewer credit | `Reviewed-by: Name` |
-| `Co-authored-by` | Co-author credit | `Co-authored-by: Name <email>` |
+| Token             | Finalidade                    | Exemplo                          |
+| ----------------- | ----------------------------- | ------------------------------   |
+| `Fixes`           | Fecha uma issue               | `Fixes #123`                   |
+| `Closes`          | Fecha uma issue               | `Closes #456`                  |
+| `Refs`            | Referencia uma issue          | `Refs #789`                    |
+| `BREAKING CHANGE` | Indica alteração incompatível | `BREAKING CHANGE: description`   |
+| `Reviewed-by`     | Crédito ao revisor            | `Reviewed-by: Name`              |
+| `Co-authored-by`  | Definir coautor               | `Co-authored-by: Devin <devin@cognition.ai>` |
 
-## Integration with Tooling
+## Integração com Ferramentas
 
-### Commitlint Configuration
+### Configuração do Commitlint
 
 ```javascript
 // commitlint.config.js
+
 module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {
@@ -223,16 +281,19 @@ module.exports = {
 };
 ```
 
-### Husky Pre-commit Hook
+### Hook de Pre-commit com Husky
 
 ```bash
 # .husky/commit-msg
+
 #!/bin/sh
+
 . "$(dirname "$0")/_/husky.sh"
+
 npx --no-install commitlint --edit "$1"
 ```
 
-### Package.json Setup
+### Configuração do Package.json
 
 ```json
 {
@@ -247,14 +308,16 @@ npx --no-install commitlint --edit "$1"
 }
 ```
 
-## Semantic Release Integration
+## Integração com Semantic Release
 
-Conventional commits enable automated versioning:
+Conventional Commits permite o versionamento automatizado:
 
 ```yaml
 # .releaserc.yml
+
 branches:
   - main
+
 plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
@@ -263,56 +326,57 @@ plugins:
   - "@semantic-release/git"
 ```
 
-### Version Bumping Rules
+## Gerador de Mensagens de Commit
 
-| Commit Type | Version Bump | Example |
-|-------------|--------------|---------|
-| `feat` | Minor (0.X.0) | 1.2.0 → 1.3.0 |
-| `fix` | Patch (0.0.X) | 1.2.0 → 1.2.1 |
-| `perf` | Patch (0.0.X) | 1.2.0 → 1.2.1 |
-| `BREAKING CHANGE` | Major (X.0.0) | 1.2.0 → 2.0.0 |
-| Others | No bump | 1.2.0 → 1.2.0 |
-
-## Commit Message Generator
-
-When analyzing changes, generate a commit message:
+Ao analisar alterações, gere uma mensagem de commit:
 
 ```bash
-# 1. Check staged changes
+# 1. Verificar alterações staged
+
 git diff --cached --name-only
 
-# 2. Analyze change type
-# - New files = likely feat
-# - Modified test files = test
-# - Modified docs = docs
-# - Bug-related keywords = fix
+# 2. Analisar o tipo de alteração
 
-# 3. Identify scope from path
-# src/components/Button.tsx → components or ui
-# src/services/auth.ts → auth or services
+# - Arquivos novos = provavelmente feat
 
-# 4. Generate message
+# - Arquivos de teste modificados = test
+
+# - Documentação modificada = docs
+
+# - Palavras-chave relacionadas a bugs = fix
+
+# 3. Identificar o escopo a partir do caminho
+
+# src/components/Button.tsx → components ou ui
+
+# src/services/auth.ts → auth ou services
+
+# 4. Gerar a mensagem
+
 feat(ui): add loading state to Button component
 ```
 
-## Best Practices
 
-1. **One logical change per commit**: Don't mix features with fixes
-2. **Commit early, commit often**: Small, focused commits
-3. **Write for reviewers**: Messages should explain why, not just what
-4. **Reference issues**: Link to tickets/issues when applicable
-5. **Use scopes consistently**: Establish team conventions
-6. **Review before committing**: `git diff --cached` to verify changes
 
-## Output Checklist
+## Boas Práticas
 
-Every commit message should:
+1. **Uma alteração lógica por commit**: Não misture features com correções
+2. **Faça commits cedo e com frequência**: Mantenha commits pequenos e focados
+3. **Escreva pensando nos revisores**: As mensagens devem explicar o porquê, não apenas o quê
+4. **Referencie issues**: Vincule tickets/issues quando aplicável
+5. **Use escopos de forma consistente**: Estabeleça convenções para o time
+6. **Revise antes de fazer o commit**: Use `git diff --cached` para verificar as alterações
 
-- [ ] Start with valid type (feat, fix, docs, etc.)
-- [ ] Use imperative mood in description
-- [ ] Keep description under 72 characters
-- [ ] Include scope when applicable
-- [ ] Mark breaking changes with `!` or footer
-- [ ] Reference related issues in footer
-- [ ] Provide body for complex changes
-- [ ] Follow team's scope conventions
+### Validação obrigatória
+
+Toda mensagem de commit deve:
+
+* [ ] Começar com um tipo válido (`feat`, `fix`, `docs`, etc.)
+* [ ] Usar o modo imperativo na descrição
+* [ ] Manter a descrição abaixo de 72 caracteres
+* [ ] Incluir escopo quando aplicável
+* [ ] Marcar breaking changes com `!` ou rodapé
+* [ ] Referenciar issues relacionadas no rodapé
+* [ ] Fornecer corpo para alterações complexas
+* [ ] Seguir as convenções de escopo do time
+* [ ] Incluir o coautor obrigatório (`Co-authored-by: Devin <devin@cognition.ai>`)
