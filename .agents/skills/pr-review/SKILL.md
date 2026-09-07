@@ -247,6 +247,7 @@ Carregue todo documento listado abaixo antes de tocar no diff. Não pule nenhum.
 5. `.agents/skills/architecture/references/verification.md`
 6. `.agents/skills/architecture/references/subdomain-persistence.md`
 7. `.agents/skills/architecture/references/module-scaffolding.md`
+8. `.agents/skills/security-pr-checklist-skill/SKILL.md`
 
 Depois varra o diff quanto à estrutura de diretórios: se algum caminho alterado contiver um diretório `shared/` ao lado de múltiplas pastas irmãs `{subdomain}/`, o PR toca um **módulo baseado em subdomain** — anote isso para a Fase 1.
 
