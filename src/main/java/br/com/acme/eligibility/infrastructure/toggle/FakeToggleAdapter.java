@@ -18,11 +18,15 @@ import org.springframework.stereotype.Component;
 public class FakeToggleAdapter implements TogglePort {
 
     private static final Set<String> DISABLED_REGIONS = Set.of("NORTE");
+    private static final String UNAVAILABLE_REGION = "UNAVAILABLE";
 
     private final ToggleProperties properties;
 
     @Override
     public ProductToggle fetchToggle(EligibilityRequest request) {
+        if (UNAVAILABLE_REGION.equals(request.getRegiao().getValue())) {
+            throw new ToggleUnavailableException("toggle service is unavailable");
+        }
         boolean enabled = !DISABLED_REGIONS.contains(request.getRegiao().getValue());
         return new ProductToggle(properties.getProduct(), enabled);
     }

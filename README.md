@@ -35,13 +35,13 @@ Resposta `200`:
 { "cnpj": "12345678000195", "regiao": "SUDESTE", "eligible": false, "reason": "CNPJ_BLOCKED" }
 ```
 
-Fluxo: consulta o toggle do produto (`GET /toggles/{product}?cnpj&regiao&dicom`); se o produto
+Fluxo: consulta o toggle do produto (`GET /toggles/{product}` com header `X-Cnpj` e query `regiao`/`dicom`); se o produto
 estiver desligado para a região, responde negativo **sem** ler o DynamoDB. Caso contrário, lê o item
 `(cnpj, regiao)` da tabela de controle e decide.
 
 `reason` (apenas quando `eligible=false`): `PRODUCT_DISABLED_FOR_REGION`, `CNPJ_NOT_REGISTERED`, `CNPJ_BLOCKED`.
 
-Erros: `400 INVALID_REQUEST`, `503 TOGGLE_UNAVAILABLE`, `500 INTERNAL_ERROR` (mensagem genérica, sem detalhe interno).
+Erros: `400 INVALID_REQUEST`, `503 TOGGLE_UNAVAILABLE`, `503 CONTROL_UNAVAILABLE`, `500 INTERNAL_ERROR` (mensagem genérica, sem detalhe interno).
 
 ## Rodando local
 
@@ -53,7 +53,7 @@ java -jar eligibility-presentation/target/eligibility-presentation-*-boot.jar \
   --spring.profiles.active=fake
 ```
 
-No profile `fake` o adaptador `FakeToggleAdapter` responde localmente (região `NORTE` desligada).
+No profile `fake` o adaptador `FakeToggleAdapter` responde localmente (região `NORTE` desligada; `UNAVAILABLE` simula 503).
 Para o DynamoDB local:
 
 ```bash

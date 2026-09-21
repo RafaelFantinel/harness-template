@@ -1,10 +1,9 @@
-package br.com.acme.eligibility.domain.policy;
+package br.com.acme.eligibility.domain.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import br.com.acme.eligibility.domain.exception.DomainValidationException;
-import br.com.acme.eligibility.domain.model.Cnpj;
 import org.junit.jupiter.api.Test;
 
 class CnpjTest {

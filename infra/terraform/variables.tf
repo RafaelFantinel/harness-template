@@ -65,6 +65,17 @@ variable "toggle_base_url" {
   type        = string
 }
 
+variable "spring_profiles_active" {
+  description = "Profiles Spring. Vazio omite a env. Nunca copiar o nome do ambiente."
+  type        = string
+  default     = ""
+}
+
+variable "acm_certificate_arn" {
+  description = "ARN do certificado ACM do listener HTTPS do ALB"
+  type        = string
+}
+
 variable "log_retention_days" {
   description = "Retencao dos logs no CloudWatch"
   type        = number

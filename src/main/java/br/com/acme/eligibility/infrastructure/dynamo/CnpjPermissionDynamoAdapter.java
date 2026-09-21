@@ -5,15 +5,14 @@ import br.com.acme.eligibility.domain.model.Cnpj;
 import br.com.acme.eligibility.domain.model.CnpjPermission;
 import br.com.acme.eligibility.domain.model.Regiao;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 /** Adaptador DynamoDB da porta de controle de CNPJ. */
-@Slf4j
 @Component
 public class CnpjPermissionDynamoAdapter implements CnpjPermissionPort {
 
@@ -35,6 +34,10 @@ public class CnpjPermissionDynamoAdapter implements CnpjPermissionPort {
                 .sortValue(regiao.getValue())
                 .build();
 
-        return Optional.ofNullable(table.getItem(key)).map(mapper::toDomain);
+        try {
+            return Optional.ofNullable(table.getItem(key)).map(mapper::toDomain);
+        } catch (SdkException exception) {
+            throw new CnpjPermissionUnavailableException("cnpj permission store call failed", exception);
+        }
     }
 }
