@@ -5,13 +5,11 @@ import br.com.acme.eligibility.domain.model.EligibilityRequest;
 import br.com.acme.eligibility.domain.model.ProductToggle;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import retrofit2.Response;
 
 /** Adaptador Retrofit da porta de toggles. */
-@Slf4j
 @Component
 @Profile("!fake")
 @RequiredArgsConstructor

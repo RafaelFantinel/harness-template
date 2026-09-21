@@ -11,6 +11,8 @@ import br.com.acme.eligibility.domain.model.Cnpj;
 import br.com.acme.eligibility.domain.model.DenialReason;
 import br.com.acme.eligibility.domain.model.EligibilityDecision;
 import br.com.acme.eligibility.domain.model.Regiao;
+import br.com.acme.eligibility.infrastructure.dynamo.CnpjPermissionUnavailableException;
+import br.com.acme.eligibility.infrastructure.toggle.ToggleUnavailableException;
 import br.com.acme.eligibility.presentation.exception.ApiExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +65,38 @@ class EligibilityControllerTest {
         mockMvc.perform(post("/v1/elegibilidade").contentType(MediaType.APPLICATION_JSON).content(invalid))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("INVALID_REQUEST"));
+    }
+
+    @Test
+    void shouldReturnServiceUnavailableWhenToggleFails() throws Exception {
+        when(checkEligibilityUseCase.execute(any()))
+                .thenThrow(new ToggleUnavailableException("toggle service call failed"));
+
+        mockMvc.perform(post("/v1/elegibilidade").contentType(MediaType.APPLICATION_JSON).content(PAYLOAD))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.code").value("TOGGLE_UNAVAILABLE"))
+                .andExpect(jsonPath("$.message").value("toggle service is unavailable"));
+    }
+
+    @Test
+    void shouldReturnServiceUnavailableWhenControlStoreFails() throws Exception {
+        when(checkEligibilityUseCase.execute(any()))
+                .thenThrow(new CnpjPermissionUnavailableException("cnpj permission store call failed",
+                        new RuntimeException("unreachable")));
+
+        mockMvc.perform(post("/v1/elegibilidade").contentType(MediaType.APPLICATION_JSON).content(PAYLOAD))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.code").value("CONTROL_UNAVAILABLE"))
+                .andExpect(jsonPath("$.message").value("cnpj permission store is unavailable"));
+    }
+
+    @Test
+    void shouldReturnInternalErrorWhenUseCaseThrowsUnexpected() throws Exception {
+        when(checkEligibilityUseCase.execute(any())).thenThrow(new IllegalStateException("boom"));
+
+        mockMvc.perform(post("/v1/elegibilidade").contentType(MediaType.APPLICATION_JSON).content(PAYLOAD))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.code").value("INTERNAL_ERROR"))
+                .andExpect(jsonPath("$.message").value("unexpected error, try again later"));
     }
 }

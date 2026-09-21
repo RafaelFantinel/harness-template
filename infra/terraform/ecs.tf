@@ -34,12 +34,16 @@ resource "aws_ecs_task_definition" "this" {
         }
       ]
 
-      environment = [
-        { name = "AWS_REGION", value = var.aws_region },
-        { name = "DYNAMO_TABLE_NAME", value = aws_dynamodb_table.cnpj_product_control.name },
-        { name = "TOGGLE_BASE_URL", value = var.toggle_base_url },
-        { name = "SPRING_PROFILES_ACTIVE", value = var.environment }
-      ]
+      environment = concat(
+        [
+          { name = "AWS_REGION", value = var.aws_region },
+          { name = "DYNAMO_TABLE_NAME", value = aws_dynamodb_table.cnpj_product_control.name },
+          { name = "TOGGLE_BASE_URL", value = var.toggle_base_url }
+        ],
+        trimspace(var.spring_profiles_active) == "" ? [] : [
+          { name = "SPRING_PROFILES_ACTIVE", value = var.spring_profiles_active }
+        ]
+      )
 
       logConfiguration = {
         logDriver = "awslogs"
@@ -85,5 +89,5 @@ resource "aws_ecs_service" "this" {
     rollback = true
   }
 
-  depends_on = [aws_lb_listener.http]
+  depends_on = [aws_lb_listener.http, aws_lb_listener.https]
 }

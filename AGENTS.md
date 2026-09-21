@@ -12,7 +12,7 @@
 ### Rodando a aplicação
 
 - Build completo: `mvn clean install` (compila, roda testes, checkstyle e ArchUnit).
-- Subir o serviço sem rede externa: `java -jar <jar>-boot.jar --spring.profiles.active=fake`. No profile `fake`, o `FakeToggleAdapter` responde localmente (região `NORTE` desligada).
+- Subir o serviço sem rede externa: `java -jar <jar>-boot.jar --spring.profiles.active=fake`. No profile `fake`, o `FakeToggleAdapter` responde localmente (região `NORTE` desligada; `UNAVAILABLE` simula 503).
 - Com DynamoDB local: `DYNAMO_ENDPOINT=http://localhost:4566 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test java -jar ... --spring.profiles.active=fake`.
 - Escuta na porta **8080**. Healthcheck em `/actuator/health` (probes habilitados).
 - Configuração toda por variável de ambiente com default no `application.yml`: `TOGGLE_BASE_URL`, `TOGGLE_PRODUCT`, `TOGGLE_TIMEOUT_SECONDS`, `DYNAMO_TABLE_NAME`, `DYNAMO_ENDPOINT`, `AWS_REGION`.
@@ -20,7 +20,7 @@
 ### Testes
 
 - Tudo roda por Maven: `mvn test` (unitários + ArchUnit), `mvn checkstyle:check` (falha em `warning`), `mvn verify` para o ciclo completo.
-- Testes unitários vivem em `src/test/java/**` espelhando o pacote de produção (`domain/policy`, `application/usecase`, `presentation/api`, `infrastructure/toggle`).
+- Testes unitários vivem em `src/test/java/**` espelhando o pacote de produção (`domain/model`, `domain/policy`, `application/usecase`, `presentation/api`, `infrastructure/toggle`, `infrastructure/dynamo`).
 - Testes de arquitetura em `src/test/java/br/com/acme/eligibility/architecture/` — são a **fonte de verdade** das regras estruturais, não a documentação.
 - `archRule.failOnEmptyShould=true` está ligado: regra ArchUnit que não casa com nenhuma classe quebra o build.
 - Chamadas HTTP ao serviço de toggles devem ser mockadas (MockWebServer/OkHttp ou stub do `TogglePort`). Nunca bater em serviço real em teste.

@@ -430,7 +430,7 @@ Erro de infraestrutura é traduzido em exceção própria no adaptador e convert
 
 **Regras:**
 
-- ✅ Cada integração tem sua exceção (`ToggleUnavailableException`) lançada pelo adaptador
+- ✅ Cada integração tem sua exceção (`ToggleUnavailableException`, `CnpjPermissionUnavailableException`) lançada pelo adaptador
 - ✅ Um handler por tipo de exceção, com `code` estável e mensagem curta
 - ✅ Fallback `Exception.class` responde `500 INTERNAL_ERROR` com mensagem genérica
 - ✅ `log.error` com a exceção completa — o detalhe fica no log, não na resposta
@@ -448,14 +448,16 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(DomainValidationException.class)
     public ResponseEntity<ErrorResponseDto> handleDomainValidation(DomainValidationException exception) {
-        return ResponseEntity.badRequest().body(new ErrorResponseDto("INVALID_REQUEST", exception.getMessage()));
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponseDto(ErrorCode.INVALID_REQUEST.name(), exception.getMessage()));
     }
 
     @ExceptionHandler(ToggleUnavailableException.class)
     public ResponseEntity<ErrorResponseDto> handleToggleUnavailable(ToggleUnavailableException exception) {
         log.error("toggle service unavailable", exception);
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(new ErrorResponseDto("TOGGLE_UNAVAILABLE", "toggle service is unavailable"));
+                .body(new ErrorResponseDto(ErrorCode.TOGGLE_UNAVAILABLE.name(),
+                        "toggle service is unavailable"));
     }
 
     @ExceptionHandler(Exception.class)
@@ -477,6 +479,7 @@ return ResponseEntity.status(500).body(new ErrorResponseDto("ERROR", exception.t
 | Payload inválido (Bean Validation) | `400`  | `INVALID_REQUEST`    |
 | Invariante de domínio violada   | `400`  | `INVALID_REQUEST`    |
 | Serviço de toggles fora do ar   | `503`  | `TOGGLE_UNAVAILABLE` |
+| Tabela de controle indisponível | `503`  | `CONTROL_UNAVAILABLE` |
 | Qualquer outra falha            | `500`  | `INTERNAL_ERROR`     |
 
 ---
