@@ -49,7 +49,7 @@ Erros: `400 INVALID_REQUEST`, `503 TOGGLE_UNAVAILABLE`, `503 CONTROL_UNAVAILABLE
 mvn clean install                      # build + testes + checkstyle + archunit
 
 # toggles falso embutido, sem rede:
-java -jar eligibility-presentation/target/eligibility-presentation-*-boot.jar \
+java -jar target/eligibility-service-1.0.0-SNAPSHOT.jar \
   --spring.profiles.active=fake
 ```
 
@@ -59,7 +59,7 @@ Para o DynamoDB local:
 ```bash
 docker compose up -d                   # LocalStack + tabela populada
 DYNAMO_ENDPOINT=http://localhost:4566 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test \
-  java -jar eligibility-presentation/target/eligibility-presentation-*-boot.jar --spring.profiles.active=fake
+  java -jar target/eligibility-service-1.0.0-SNAPSHOT.jar --spring.profiles.active=fake
 ```
 
 ## Configuração

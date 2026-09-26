@@ -127,6 +127,13 @@ Planos de implementação devem sempre incluir build, lint e testes. Para isso, 
 
 IMPORTANTE: sempre inclua testes cobrindo os caminhos importantes. Os planos precisam prever uma suíte que cubra happy paths e edge cases — especialmente CNPJ inválido, região desconhecida, toggle desligado, toggle indisponível (`503`), CNPJ não cadastrado e CNPJ bloqueado. Testes de alta qualidade que deem confiança e cubram a maior parte da implementação.
 
+## Cursor Cloud specific instructions
+
+- O JDK padrão deste ambiente é o **Java 11** (`JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64`). O Maven lê `/etc/maven/mavenrc`. Não use o Java 21 da imagem base para compilar ou subir o serviço.
+- O `start` sobe o daemon Docker (aninhado, `fuse-overlayfs`) e o LocalStack com `docker compose up -d`. A tabela `cnpj-product-control` é criada pelo `scripts/seed-dynamo.sh`. Health: `curl -sf http://localhost:4566/_localstack/health`.
+- Subir a API (porta 8080): `DYNAMO_ENDPOINT=http://localhost:4566 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test java -jar target/eligibility-service-1.0.0-SNAPSHOT.jar --spring.profiles.active=fake`. O profile `fake` não chama o serviço de toggles.
+- Build e qualidade: `mvn -B clean install` (testes, Checkstyle e ArchUnit).
+
 ### Persistência e infraestrutura
 
 Nunca altere o schema da tabela DynamoDB apenas no `scripts/seed-dynamo.sh` — a definição real vive em `infra/terraform/dynamodb.tf`, e o seed precisa acompanhar. Toda permissão nova de IAM vai em `infra/terraform/iam.tf`, sempre com o mínimo privilégio.
